@@ -49,4 +49,31 @@ const addUser = (user) => {
   return { user_id: newId };
 };
 
-export { listAllUsers, addUser, findUserById };
+const updateUser = (id, field, value) => {
+  const user = findUserById(id);
+  console.log(user);
+  switch (field) {
+    case "name":
+      user.name = value;
+      break;
+    case "username":
+      user.username = value;
+      break;
+    case "email":
+      user.email = value;
+      break;
+    case "role":
+      user.role = value;
+      break;
+    case "password":
+      user.password = value;
+      break;
+    default:
+      console.log("I am teapot!");
+      break;
+  }
+  console.log(user);
+  return user;
+};
+
+export { listAllUsers, addUser, findUserById, updateUser };

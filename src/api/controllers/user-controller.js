@@ -1,4 +1,9 @@
-import { addUser, findUserById, listAllUsers } from "../models/user-model.js";
+import {
+  addUser,
+  findUserById,
+  listAllUsers,
+  updateUser,
+} from "../models/user-model.js";
 
 const getUsers = (req, res) => {
   res.json(listAllUsers());
@@ -24,13 +29,12 @@ const addNewUser = (req, res) => {
 };
 
 const putUser = (req, res) => {
-  res.sendStatus(200);
-  res.json({ message: "User item updated." });
+  updateUser(req.body);
+  res.status(200).json({ message: "User item updated." });
 };
 
 const deleteUser = (req, res) => {
-  res.sendStatus(200);
-  res.json({ message: "User item deleted." });
+  res.status(200).json({ message: "User item deleted." });
 };
 
 export { getUsers, getUserById, addNewUser, putUser, deleteUser };

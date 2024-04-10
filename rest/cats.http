@@ -1,3 +1,7 @@
+GET http://localhost:3000/api/v1/cats
+Accept: application/json
+
+###
 POST http://localhost:3000/api/v1/cats
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -15,3 +19,4 @@ Content-Type: image/jpeg
 
 < ./presidentti.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+

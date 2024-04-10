@@ -7,6 +7,7 @@ import {
   deleteCat,
 } from "../controllers/cat-controller.js";
 import multer from "multer";
+import { createThumbnail } from "../../middlewares.js";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -18,6 +19,9 @@ const storage = multer.diskStorage({
     let extension = "jpg";
     if (file.mimetype === "image/png") {
       extension = png;
+    }
+    if (file.mimetype === "image/jpeg") {
+      extension = jpeg;
     }
     const filename = `${prefix} - ${suffix}.${extension}`;
     cb(null, filename);
@@ -31,7 +35,10 @@ const upload = multer({
 
 const catRouter = express.Router();
 
-catRouter.route("/").get(getCat).post(upload.single("file"), postCat);
+catRouter
+  .route("/")
+  .get(getCat)
+  .post(upload.single("file"), createThumbnail, postCat);
 
 catRouter.route("/:id").get(getCatById).put(putCat).delete(deleteCat);
 

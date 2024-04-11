@@ -1,52 +1,32 @@
-const userItems = [
-  {
-    user_id: 3609,
-    name: "John Doe",
-    username: "johndoe",
-    email: "john@metropolia.fi",
-    role: "user",
-    password: "password",
-  },
+"use strict";
 
-  {
-    user_id: 3622,
-    name: "Gary Doe",
-    username: "garydoe",
-    email: "gary@metropolia.fi",
-    role: "user",
-    password: "password",
-  },
+import promisePool from "../../utils/database.js";
 
-  {
-    user_id: 3633,
-    name: "Doe Joe",
-    username: "doejoe",
-    email: "doe@metropolia.fi",
-    role: "user",
-    password: "password",
-  },
-];
-
-const listAllUsers = () => {
-  return userItems;
+const listAllUsers = async () => {
+  const [rows] = await promisePool.query("SELECT * FROM wsk_users");
+  return rows;
 };
 
-const findUserById = (id) => {
-  return userItems.find((item) => item.user_id == id);
+const findUserById = async (id) => {
+  const [rows] = await promisePool.query(
+    "SELECT * FROM wsk_users WHERE user_id = ?",
+    [id],
+  );
+  if (rows.length === 0) return false;
+  return rows[0];
 };
 
-const addUser = (user) => {
+const addUser = async (user) => {
   const { name, username, email, role, password } = user;
-  const newId = userItems[0].user_id + 1;
-  userItems.unshift({
-    user_id: newId,
-    name,
-    username,
-    email,
-    role,
-    password,
+  const sql =
+    "INSERT INTO wsk_users (name, username, email, role, password) VALUES (?, ?, ?, ?, ?)";
+  const params = [name, username, email, password, role].map((value) => {
+    if (value === undefined) return null;
+    else return value;
   });
-  return { user_id: newId };
+  const rows = await promisePool.execute(sql, params);
+  if (rows[0].affectedRows === 0) return false;
+  return { message: "Success" };
 };
 
 const updateUser = (id, field, value) => {

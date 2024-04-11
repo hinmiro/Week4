@@ -31,7 +31,7 @@ const postCat = async (req, res) => {
 const putCat = async (req, res) => {
   console.log(req.body);
   const result = await modifyCat(req.body);
-  if (result.ok) {
+  if (result) {
     res.status(200).json({ message: "Cat modification succeeded.", result });
   } else {
     res.sendStatus(400);
@@ -40,7 +40,7 @@ const putCat = async (req, res) => {
 
 const deleteCat = async (req, res) => {
   const result = await removeCat(req.params.id);
-  if (result.ok) {
+  if (result) {
     res.status(200).json({ message: "Cat removed successfully", result });
   } else {
     res.sendStatus(400);

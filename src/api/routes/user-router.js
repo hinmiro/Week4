@@ -5,6 +5,7 @@ import {
   addNewUser,
   putUser,
   deleteUser,
+  getCatsByUserid,
 } from "../controllers/user-controller.js";
 
 const userRouter = express.Router();
@@ -12,5 +13,7 @@ const userRouter = express.Router();
 userRouter.route("/").get(getUsers).post(addNewUser);
 
 userRouter.route("/:id").get(getUserById).delete(deleteUser).put(putUser);
+
+userRouter.route("/getCats/:id").get(getCatsByUserid);
 
 export default userRouter;

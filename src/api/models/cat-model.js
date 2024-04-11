@@ -11,7 +11,11 @@ const findCatById = async (id) => {
     "SELECT * FROM wsk_cats WHERE cat_id = ?",
     [id],
   );
-  console.log("rows", rows);
+  const owner = await promisePool.execute(
+    "SELECT name FROM wsk_users WHERE user_id = ?",
+    [rows[0].owner],
+  );
+  rows[0].owner = owner[0];
   if (rows.length === 0) {
     return false;
   }

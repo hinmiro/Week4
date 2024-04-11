@@ -1,4 +1,10 @@
-import { addCat, findCatById, listAllCats } from "../models/cat-model.js";
+import {
+  addCat,
+  findCatById,
+  listAllCats,
+  modifyCat,
+  removeCat,
+} from "../models/cat-model.js";
 
 const getCat = async (req, res) => {
   res.json(await listAllCats());
@@ -13,26 +19,32 @@ const getCatById = async (req, res) => {
   }
 };
 
-const postCat = (req, res) => {
-  const result = addCat(req.body);
-  console.log("form data:", req);
-  console.log("file data:", req.file);
-  console.log(req.body);
-  if (result.cat_id) {
+const postCat = async (req, res) => {
+  const result = await addCat(req.body);
+  if (result.ok) {
     res.status(201).json({ message: "New cat added.", result });
   } else {
     res.sendStatus(400);
   }
 };
 
-const putCat = (req, res) => {
-  // not implemented in this example, this is future homework
-  res.sendStatus(200);
+const putCat = async (req, res) => {
+  console.log(req.body);
+  const result = await modifyCat(req.body);
+  if (result.ok) {
+    res.status(200).json({ message: "Cat modification succeeded.", result });
+  } else {
+    res.sendStatus(400);
+  }
 };
 
-const deleteCat = (req, res) => {
-  // not implemented in this example, this is future homework
-  res.sendStatus(200);
+const deleteCat = async (req, res) => {
+  const result = await removeCat(req.params.id);
+  if (result.ok) {
+    res.status(200).json({ message: "Cat removed successfully", result });
+  } else {
+    res.sendStatus(400);
+  }
 };
 
 export { getCat, getCatById, postCat, putCat, deleteCat };

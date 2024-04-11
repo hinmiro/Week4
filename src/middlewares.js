@@ -5,7 +5,6 @@ const createThumbnail = async (req, res, next) => {
     next();
     return;
   }
-  console.log(req.file.path);
   const [filename, extension] = req.file.filename.split(".");
 
   await sharp(req.file.path)

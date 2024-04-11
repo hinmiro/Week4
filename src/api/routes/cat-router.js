@@ -15,13 +15,13 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const suffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const prefix = file.filename;
+    const prefix = file.fieldname;
     let extension = "jpg";
     if (file.mimetype === "image/png") {
-      extension = png;
+      extension = "png";
     }
     if (file.mimetype === "image/jpeg") {
-      extension = jpeg;
+      extension = "jpeg";
     }
     const filename = `${prefix} - ${suffix}.${extension}`;
     cb(null, filename);

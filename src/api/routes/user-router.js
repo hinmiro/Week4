@@ -16,7 +16,7 @@ userRouter.route("/").get(getUsers).post(addNewUser);
 userRouter
   .route("/:id")
   .get(getUserById)
-  .delete(deleteUser)
+  .delete(authenticateToken, deleteUser)
   .put(authenticateToken, putUser);
 
 userRouter.route("/getCats/:id").get(getCatsByUserid);

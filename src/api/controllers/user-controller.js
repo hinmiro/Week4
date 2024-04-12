@@ -25,19 +25,19 @@ const addNewUser = async (req, res) => {
   console.log(req.body);
   req.body.password = bcrypt.hashSync(req.body.password, 10);
   const result = await addUser(req.body);
-  if (result.ok) res.status(201).json({ message: "New user added: ", result });
+  if (result) res.status(201).json({ message: "New user added: ", result });
   else res.sendStatus(400);
 };
 
 const putUser = async (req, res) => {
-  const result = await updateUser(req.body, req.params.id);
+  const result = await updateUser(req.body, req.params.id, res.locals.user);
   if (result) {
     res.status(200).json({ message: "User modification succeeded.", result });
   } else res.sendStatus(400);
 };
 
 const deleteUser = async (req, res) => {
-  const result = await removeUser(req.params.id);
+  const result = await removeUser(req.params.id, res.locals.user);
   console.log(result);
   if (result) {
     res.status(200).json({ message: "User removed successfully", result });

@@ -7,11 +7,21 @@ import {
   deleteUser,
   getCatsByUserid,
 } from "../controllers/user-controller.js";
-import { authenticateToken } from "../../middlewares.js";
+import { authenticateToken, validationErrors } from "../../middlewares.js";
+import { body } from "express-validator";
 
 const userRouter = express.Router();
 
-userRouter.route("/").get(getUsers).post(addNewUser);
+userRouter
+  .route("/")
+  .get(getUsers)
+  .post(
+    body("email").trim().isEmail(),
+    body("username").trim().isLength({ min: 3, max: 20 }),
+    body("password").trim().isLength({ min: 8 }),
+    validationErrors,
+    addNewUser,
+  );
 
 userRouter
   .route("/:id")

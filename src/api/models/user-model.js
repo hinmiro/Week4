@@ -21,18 +21,13 @@ const findUserById = async (id) => {
 
 const addUser = async (user) => {
   const { name, username, email, password, role } = user;
+  const params = [name, username, email, password, role];
+  if (params.some((p) => p === null || p === undefined)) {
+    return false;
+  }
   const sql =
     "INSERT INTO wsk_users (name, username, email, password, role) VALUES (?, ?, ?, ?, ?)";
-  const params = [
-    name || "Unknow",
-    username || "Unknow",
-    email || "anonmail@dot.com",
-    password || "wordpass",
-    role || "user",
-  ].map((value) => {
-    if (value === undefined) return null;
-    else return value;
-  });
+
   const rows = await promisePool.execute(sql, params);
   if (rows[0].affectedRows === 0) return false;
   return { message: "Success" };

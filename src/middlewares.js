@@ -1,6 +1,8 @@
 import sharp from "sharp";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import { validationResult } from "express-validator";
+import * as fs from "node:fs";
 
 const createThumbnail = async (req, res, next) => {
   if (!req.file) {
@@ -51,4 +53,25 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-export { createThumbnail, authenticateToken, notFoundHandler, errorHandler };
+const validationErrors = async (req, res, next) => {
+  const errors = await validationResult(req);
+  if (!errors.isEmpty()) {
+    //if (req.file.path) fs.unlinkSync(req.file.path);
+    const messages = errors
+      .array()
+      .map((error) => `${error.path}: ${error.msg}}`)
+      .join(", ");
+    const error = new Error(messages);
+    error.status = 400;
+    next(error);
+  }
+  next();
+};
+
+export {
+  createThumbnail,
+  authenticateToken,
+  notFoundHandler,
+  errorHandler,
+  validationErrors,
+};

@@ -21,19 +21,26 @@ const getUserById = async (req, res) => {
   }
 };
 
-const addNewUser = async (req, res) => {
+const addNewUser = async (req, res, next) => {
   console.log(req.body);
   req.body.password = bcrypt.hashSync(req.body.password, 10);
   const result = await addUser(req.body);
-  if (result.ok) res.status(201).json({ message: "New user added: ", result });
-  else res.sendStatus(400);
+  if (!result) {
+    const error = new Error("Invalid or missing fields");
+    error.status = 400;
+    next(error);
+  } else {
+    res.status(201).json({ message: "New user added: ", result });
+  }
 };
 
-const putUser = async (req, res) => {
+const putUser = async (req, res, next) => {
   const result = await updateUser(req.body, req.params.id);
-  if (result) {
+  if (!result) {
+    res.sendStatus(400);
+  } else {
     res.status(200).json({ message: "User modification succeeded.", result });
-  } else res.sendStatus(400);
+  }
 };
 
 const deleteUser = async (req, res) => {

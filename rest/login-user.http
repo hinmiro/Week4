@@ -1,0 +1,13 @@
+# @name login
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "jarfa",
+  "password": "0000"
+}
+### TOKEN-TEST
+POST http://localhost:3000/api/not-found/
+
+
+###

@@ -7,12 +7,17 @@ import {
   deleteUser,
   getCatsByUserid,
 } from "../controllers/user-controller.js";
+import { authenticateToken } from "../../middlewares.js";
 
 const userRouter = express.Router();
 
 userRouter.route("/").get(getUsers).post(addNewUser);
 
-userRouter.route("/:id").get(getUserById).delete(deleteUser).put(putUser);
+userRouter
+  .route("/:id")
+  .get(getUserById)
+  .delete(deleteUser)
+  .put(authenticateToken, putUser);
 
 userRouter.route("/getCats/:id").get(getCatsByUserid);
 

@@ -15,46 +15,19 @@ const findUserById = async (id) => {
   );
   if (rows.length === 0) return false;
 
-  const password = rows.map((row) => row.password);
-
-  const iv = Buffer.from(password[0].slice(0, 32), "hex");
-  const encryptedPassword = password[0].slice(32);
-  const secretKey = Buffer.from(process.env.SECRETKEY, "hex");
-
-  const decipher = crypto.createDecipheriv(
-    "aes-256-cbc",
-    Buffer.from(secretKey),
-    iv,
-  );
-  let decryptedPassword = decipher.update(encryptedPassword, "hex", "utf-8");
-  decryptedPassword += decipher.final("utf-8");
-  console.log("decrypted password:", decryptedPassword);
-
   console.log("rows: ", rows);
   return rows[0];
 };
 
 const addUser = async (user) => {
-  const secretKey = process.env.SECRETKEY;
-  console.log("key:", secretKey);
-  const { name, username, email, role, password } = user;
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv(
-    "aes-256-cbc",
-    Buffer.from(secretKey, "hex"),
-    iv,
-  );
-
-  let cryptedPass = cipher.update(password, "utf-8", "hex");
-  cryptedPass += cipher.final("hex");
-  const encryptedDataWithSalt = iv.toString("hex") + cryptedPass;
+  const { name, username, email, password, role } = user;
   const sql =
     "INSERT INTO wsk_users (name, username, email, password, role) VALUES (?, ?, ?, ?, ?)";
   const params = [
     name || "Unknow",
     username || "Unknow",
     email || "anonmail@dot.com",
-    encryptedDataWithSalt || "wordpass",
+    password || "wordpass",
     role || "user",
   ].map((value) => {
     if (value === undefined) return null;
@@ -63,6 +36,13 @@ const addUser = async (user) => {
   const rows = await promisePool.execute(sql, params);
   if (rows[0].affectedRows === 0) return false;
   return { message: "Success" };
+};
+
+const getUserByUsername = async (user) => {
+  const sql = "SELECT * FROM wsk_users WHERE username = ?";
+  const [rows] = await promisePool.execute(sql, [user]);
+  if (rows.length === 0) return false;
+  return rows[0];
 };
 
 const updateUser = async (user, id) => {
@@ -140,4 +120,5 @@ export {
   updateUser,
   removeUser,
   getCatsById,
+  getUserByUsername,
 };

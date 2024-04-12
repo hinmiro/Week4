@@ -6,11 +6,9 @@ import {
   removeUser,
   getCatsById,
 } from "../models/user-model.js";
-import * as crypto from "node:crypto";
-import { removeCat } from "../models/cat-model.js";
+import bcrypt from "bcrypt";
 
 const getUsers = async (req, res) => {
-  console.log(crypto.randomBytes(16));
   res.json(await listAllUsers());
 };
 
@@ -25,6 +23,7 @@ const getUserById = async (req, res) => {
 
 const addNewUser = async (req, res) => {
   console.log(req.body);
+  req.body.password = bcrypt.hashSync(req.body.password, 10);
   const result = await addUser(req.body);
   if (result.ok) res.status(201).json({ message: "New user added: ", result });
   else res.sendStatus(400);

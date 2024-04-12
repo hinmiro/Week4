@@ -20,8 +20,8 @@ const getCatById = async (req, res) => {
 };
 
 const postCat = async (req, res) => {
-  const result = await addCat(req.body);
-  if (result.ok) {
+  const result = await addCat(req.body, req.file);
+  if (result) {
     res.status(201).json({ message: "New cat added.", result });
   } else {
     res.sendStatus(400);
@@ -30,7 +30,7 @@ const postCat = async (req, res) => {
 
 const putCat = async (req, res) => {
   console.log(req.body);
-  const result = await modifyCat(req.body);
+  const result = await modifyCat(req.body, req.params.id, res.locals.user);
   if (result) {
     res.status(200).json({ message: "Cat modification succeeded.", result });
   } else {
@@ -39,7 +39,7 @@ const putCat = async (req, res) => {
 };
 
 const deleteCat = async (req, res) => {
-  const result = await removeCat(req.params.id);
+  const result = await removeCat(req.params.id, res.locals.user);
   if (result) {
     res.status(200).json({ message: "Cat removed successfully", result });
   } else {

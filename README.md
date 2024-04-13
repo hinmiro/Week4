@@ -28,3 +28,5 @@
 
 **[Link to assignment 7](https://github.com/hinmiro/Week4/tree/Assignment7)**
 
+[Link to server app](http://10.120.32.97/app/api/v1/users)
+

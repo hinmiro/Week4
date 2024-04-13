@@ -44,7 +44,7 @@ const putUser = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res) => {
-  const result = await removeUser(req.params.id);
+  const result = await removeUser(req.params.id, res.locals.user);
   console.log(result);
   if (result) {
     res.status(200).json({ message: "User removed successfully", result });

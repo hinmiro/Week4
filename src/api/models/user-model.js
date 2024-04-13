@@ -41,6 +41,10 @@ const getUserByUsername = async (user) => {
 };
 
 const updateUser = async (body, id, user) => {
+  if (user.role !== "admin" && body.role) {
+    return { message: "Only admins can modify user roles" };
+  }
+
   let sql = promisePool.format(`UPDATE wsk_users SET ? WHERE user_id = ?`, [
     body,
     user.user_id,

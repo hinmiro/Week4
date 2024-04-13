@@ -12,7 +12,7 @@ import {
   createThumbnail,
   validationErrors,
 } from "../../middlewares.js";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -35,6 +35,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   destination: "uploads/",
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
   storage,
   fileFilter: (req, file, cb) => {
     if (
@@ -66,8 +69,22 @@ catRouter
 
 catRouter
   .route("/:id")
-  .get(getCatById)
-  .put(authenticateToken, putCat)
-  .delete(authenticateToken, deleteCat);
+  .get(param("id").isNumeric(), validationErrors, getCatById)
+  .put(
+    authenticateToken,
+    upload.single("file"),
+    param("id").isNumeric().optional(),
+    body("weight").trim().isNumeric().optional(),
+    body("cat_name").trim().isLength({ min: 3, max: 20 }).optional(),
+    body("owner").trim().isNumeric().optional(),
+    validationErrors,
+    putCat,
+  )
+  .delete(
+    authenticateToken,
+    param("id").isNumeric(),
+    validationErrors,
+    deleteCat,
+  );
 
 export default catRouter;

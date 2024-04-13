@@ -35,12 +35,13 @@ const addNewUser = async (req, res, next) => {
 };
 
 const putUser = async (req, res, next) => {
-  const result = await updateUser(req.body, req.params.id);
+  const result = await updateUser(req.body, req.params.id, res.locals.user);
   if (!result) {
-    res.sendStatus(400);
-  } else {
+    const error = new Error("Invalid values.");
+    error.status = 400;
+    next(error);
+  } else
     res.status(200).json({ message: "User modification succeeded.", result });
-  }
 };
 
 const deleteUser = async (req, res) => {

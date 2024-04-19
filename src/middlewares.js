@@ -59,7 +59,7 @@ const validationErrors = async (req, res, next) => {
     //if (req.file.path) fs.unlinkSync(req.file.path);
     const messages = errors
       .array()
-      .map((error) => `${error.path}: ${error.msg}}`)
+      .map((error) => `${error.path}: ${error.msg}`)
       .join(", ");
     const error = new Error(messages);
     error.status = 400;

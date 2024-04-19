@@ -21,6 +21,7 @@ const findUserById = async (id) => {
 
 const addUser = async (user) => {
   const { name, username, email, password, role } = user;
+  console.log("name:", name);
   const params = [name, username, email, password, role];
   if (params.some((p) => p === null || p === undefined)) {
     return false;

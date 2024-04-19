@@ -29,7 +29,7 @@ const addCat = async (cat, file) => {
 
   const params = [cat_name, weight || 0, owner, file.filename, birthdate].map(
     (arvo) => {
-      if (arvo === undefined) {
+      if (arvo === undefined || arvo === null) {
         return null;
       } else {
         return arvo;
